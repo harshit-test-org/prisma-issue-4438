@@ -1,0 +1,27 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Property {
+  id           String         @id @default(cuid())
+  Availability Availability[]
+}
+
+model Availability {
+  date       DateTime
+  property   Property           @relation(fields: [propertyId], references: [id])
+  propertyId String
+  status     AvailabilityStatus @default(AVAILABLE)
+
+  @@unique([propertyId, date, status])
+}
+
+enum AvailabilityStatus {
+  AVAILABLE
+}
+
